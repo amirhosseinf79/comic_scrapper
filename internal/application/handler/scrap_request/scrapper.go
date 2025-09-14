@@ -18,6 +18,15 @@ func NewManagerHandler(manager interfaces.ManagerService, logger interfaces.Logg
 	}
 }
 
+// RequestProcess
+// @Summary Request Scrapper
+// @Description Request Scrapper to begin the process
+// @Tags Service
+// @Accept json
+// @Produce json
+// @Param fields body manager.PageScrapRequest true "Fields"
+// @Success 200 {array} manager.PerPageResponse
+// @Router /api/v1/scrapper/request [post]
 func (s scrapperH) RequestProcess(ctx *fiber.Ctx) error {
 	var fields manager.PageScrapRequest
 	err := ctx.BodyParser(&fields)
@@ -34,6 +43,15 @@ func (s scrapperH) RequestProcess(ctx *fiber.Ctx) error {
 	return ctx.JSON(response)
 }
 
+// GetLogByID
+// @Summary Get Request Result
+// @Description Get Request Result By LogID
+// @Tags Log
+// @Accept json
+// @Produce json
+// / @Param logID path int true "logID"
+// @Success 200 {object} manager.LogMock
+// @Router /api/v1/logger/{logID} [get]
 func (s scrapperH) GetLogByID(ctx *fiber.Ctx) error {
 	logID, err := ctx.ParamsInt("id")
 	if err != nil {

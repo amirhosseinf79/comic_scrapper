@@ -13,8 +13,18 @@ import (
 	"github.com/amirhosseinf79/comic_scrapper/internal/service/logger"
 	manager2 "github.com/amirhosseinf79/comic_scrapper/internal/service/manager"
 	"github.com/lpernett/godotenv"
+
+	_ "github.com/amirhosseinf79/comic_scrapper/docs"
 )
 
+// @title Comic Scrapper
+// @version 1.0
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
+// @description Bearer [...]
+// @schemes http
+// @BasePath /
 func main() {
 	err := godotenv.Load()
 	if err != nil {
@@ -41,6 +51,7 @@ func main() {
 	handler := scraprequest.NewManagerHandler(manager, logService)
 
 	server1 := server.NewWebServer(handler)
+	server1.InitSwaggerHandlers()
 	server1.InitScrapHandlers()
 	server1.InitLoggerHandlers()
 	server1.Start(mainPort)
