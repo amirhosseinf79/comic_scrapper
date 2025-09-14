@@ -1,7 +1,6 @@
 package scrapper
 
 import (
-	"context"
 	"fmt"
 	"regexp"
 	"strings"
@@ -182,28 +181,14 @@ func (r *rodS) GetReaderImageURLs() []string {
 
 func (r *rodS) NextReaderImage() string {
 	r.ConsoleAdd("NextReaderImage", r.status.Pending)
-	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
-	defer cancel()
-
 	waitTime := 50 * time.Millisecond
 
-loop:
-	for {
-		select {
-		case <-ctx.Done():
-			err := ctx.Err()
-			r.ConsoleAdd("NextReaderImage", r.status.Failed, err.Error())
-			break loop
-		default:
-			nextBtn, err := r.page.Timeout(1 * time.Second).Element("#btnNext")
-			if err == nil && nextBtn != nil {
-				nextBtn.MustClick()
-				time.Sleep(waitTime)
-				break loop
-			} else {
-				time.Sleep(waitTime)
-			}
-		}
+	nextBtn, err := r.page.Timeout(1 * time.Second).Element("#btnNext")
+	if err == nil && nextBtn != nil {
+		nextBtn.MustClick()
+		time.Sleep(waitTime)
+	} else {
+		r.ConsoleAdd("NextReaderImage", r.status.Failed)
 	}
 	return r.page.MustInfo().URL[len(r.webURL):]
 }
