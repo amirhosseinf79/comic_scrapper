@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/amirhosseinf79/comic_scrapper/internal/domain/enum"
 	"github.com/amirhosseinf79/comic_scrapper/internal/domain/model"
 	"github.com/amirhosseinf79/comic_scrapper/internal/dto/comic"
 )
@@ -30,6 +31,10 @@ func (r *rodS) GenerateComicInfo(logger *model.Log, path string) (*comic.Info, e
 	fmt.Println("Has Thumbnail?", len(comicM.ThumbnailFileAddress) > 0)
 
 	episodes := scrapper.GetPageEpisodes()
+	if len(episodes) == 0 {
+		r.ConsoleAdd("GenerateComicInfo", enum.Failed, "no episode found")
+		return nil, fmt.Errorf("no episode found")
+	}
 	firstEpisode := episodes[len(episodes)-1]
 	fmt.Println("First Episode:", firstEpisode.Title)
 

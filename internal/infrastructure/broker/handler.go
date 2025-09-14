@@ -58,8 +58,10 @@ func (s *serverS) HandlePageProcess(ctx context.Context, t *asynq.Task) error {
 	if err := json.Unmarshal(t.Payload(), &p); err != nil {
 		return fmt.Errorf("json.Unmarshal failed: %v: %w", err, asynq.SkipRetry)
 	}
+	nowTime := time.Now().Unix()
 	log.Printf("Processing %v, logID: %v\n", p.Page, p.LogID)
 	logM, err := s.logger.GetById(p.LogID)
+	logM.Status = enum.Pending
 	if err != nil {
 		return err
 	}
@@ -67,11 +69,8 @@ func (s *serverS) HandlePageProcess(ctx context.Context, t *asynq.Task) error {
 	c := make(chan error, 1)
 	go func() {
 		_, err := s.scrapper.GenerateComicInfo(logM, p.Page)
-		if logM.ProcessedFiles == logM.TotalFiles && logM.ProcessedEpisodes == logM.TotalEpisodes {
-			logM.Status = enum.Succeed
-		} else {
-			logM.Status = enum.Failed
-		}
+		logM.SetStatus()
+		logM.TimeEstimated = time.Now().Unix() - nowTime
 		_ = s.logger.Update(logM)
 		select {
 		case c <- err:

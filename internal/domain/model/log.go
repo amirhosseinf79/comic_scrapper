@@ -11,6 +11,7 @@ type Log struct {
 	Status            enum.LogStatus `json:"status"`
 	WebhookSend       bool           `json:"webhookSend"`
 	HasInfo           bool           `json:"hasInfo"`
+	TimeEstimated     int64          `json:"timeEstimated"`
 	TotalEpisodes     int            `json:"totalEpisodes"`
 	TotalFiles        int            `json:"totalFiles"`
 	ProcessedEpisodes int            `json:"processedEpisodes"`
@@ -21,8 +22,16 @@ type Log struct {
 
 func InitLog() *Log {
 	return &Log{
-		Status:  enum.Queued,
 		HasInfo: true,
+		Status:  enum.Queued,
 		Console: make([]string, 0),
+	}
+}
+
+func (l *Log) SetStatus() {
+	if l.ProcessedFiles == l.TotalFiles && l.ProcessedEpisodes == l.TotalEpisodes && l.TotalEpisodes != 0 && l.TotalFiles != 0 {
+		l.Status = enum.Succeed
+	} else {
+		l.Status = enum.Failed
 	}
 }

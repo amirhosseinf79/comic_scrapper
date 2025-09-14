@@ -78,7 +78,7 @@ func (r *rodS) Close() {
 }
 
 func (r *rodS) ClosePage() {
-	r.page.MustClose()
+	_ = r.page.Close()
 }
 
 func (r *rodS) CallPage(url string) error {

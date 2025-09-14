@@ -35,7 +35,7 @@ func (r *rodS) GetReaderTitle() string {
 
 func (r *rodS) GetPageTitle() string {
 	r.ConsoleAdd("GetPageTitle", r.status.Pending)
-	getTitleElement, err := r.page.Element(r.infoContainer.ComicTitle)
+	getTitleElement, err := r.page.Timeout(1 * time.Second).Element(r.infoContainer.ComicTitle)
 	if err != nil {
 		return ""
 	}
@@ -50,7 +50,7 @@ func (r *rodS) GetPageTitle() string {
 
 func (r *rodS) GetPageCover() string {
 	r.ConsoleAdd("GetPageCover", r.status.Pending)
-	getImageElement, err := r.page.Element(r.infoContainer.ComicCover)
+	getImageElement, err := r.page.Timeout(1 * time.Second).Element(r.infoContainer.ComicCover)
 	if err != nil {
 		return ""
 	}
@@ -65,7 +65,7 @@ func (r *rodS) GetPageCover() string {
 
 func (r *rodS) GetPageGenres() []string {
 	r.ConsoleAdd("GetPageGenres", r.status.Pending)
-	genresElement, _ := r.page.Elements("p:nth-of-type(1) a.dotUnder")
+	genresElement, _ := r.page.Timeout(1 * time.Second).Elements("p:nth-of-type(1) a.dotUnder")
 	genres := make([]string, 0)
 	for _, g := range genresElement {
 		genres = append(genres, g.MustText())
@@ -80,7 +80,7 @@ func (r *rodS) GetPageGenres() []string {
 func (r *rodS) GetPageInfo(title string) string {
 	r.ConsoleAdd("GetPageInfo", r.status.Pending, title)
 	rawTitle := fmt.Sprintf("%v:", title)
-	infoElements, _ := r.page.Elements(r.infoContainer.InfoContainer)
+	infoElements, _ := r.page.Timeout(1 * time.Second).Elements(r.infoContainer.InfoContainer)
 	for _, p := range infoElements {
 		txt := strings.TrimSpace(p.MustText())
 		if !strings.HasPrefix(txt, r.infoContainer.InfoTitles.Description) {
@@ -106,7 +106,7 @@ func (r *rodS) GetPageInfo(title string) string {
 func (r *rodS) GetPageInfoList(title string) []string {
 	r.ConsoleAdd("GetPageInfoList", r.status.Pending, title)
 	rawTitle := fmt.Sprintf("%v:", title)
-	paragraphs, _ := r.page.Elements(r.infoContainer.InfoContainer)
+	paragraphs, _ := r.page.Timeout(1 * time.Second).Elements(r.infoContainer.InfoContainer)
 	for _, p := range paragraphs {
 		txt := strings.TrimSpace(p.MustText())
 		if !strings.HasPrefix(txt, r.infoContainer.InfoTitles.Description) {
@@ -124,7 +124,7 @@ func (r *rodS) GetPageInfoList(title string) []string {
 
 func (r *rodS) GetPageEpisodes() []scrapper.Episode {
 	r.ConsoleAdd("GetPageEpisodes", r.status.Pending)
-	trs, _ := r.page.Elements("table.listing tbody tr")
+	trs, _ := r.page.Timeout(1 * time.Second).Elements("table.listing tbody tr")
 	episodes := make([]scrapper.Episode, 0)
 	for _, tr := range trs {
 		linkEl, _ := tr.Element("a")
@@ -153,7 +153,7 @@ func (r *rodS) GetPageEpisodes() []scrapper.Episode {
 
 func (r *rodS) GetReaderImageURLs() []string {
 	r.ConsoleAdd("GetReaderImageURLs", r.status.Pending)
-	images, _ := r.page.Elements(r.infoContainer.ImageDiv)
+	images, _ := r.page.Timeout(1 * time.Second).Elements(r.infoContainer.ImageDiv)
 	imgURLs := make([]string, 0)
 	for _, image := range images {
 		imageURL, err := image.Attribute("src")
@@ -184,7 +184,7 @@ loop:
 			r.ConsoleAdd("NextReaderImage", r.status.Failed, context.DeadlineExceeded.Error())
 			break loop
 		default:
-			nextBtn, err := r.page.Element("#btnNext")
+			nextBtn, err := r.page.Timeout(1 * time.Second).Element("#btnNext")
 			if err == nil && nextBtn != nil {
 				nextBtn.MustClick()
 				time.Sleep(waitTime)
