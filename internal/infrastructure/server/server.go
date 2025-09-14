@@ -12,7 +12,7 @@ type server struct {
 	app             *fiber.App
 }
 
-func NewServer(
+func NewWebServer(
 	scrapperHandler interfaces.ScraperHandler,
 ) interfaces.ServerService {
 	app := fiber.New()

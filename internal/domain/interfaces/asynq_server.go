@@ -7,7 +7,7 @@ import (
 )
 
 type AsynqServer interface {
-	AddServices(scrapper Scrapper, logger Logger) AsynqServer
+	AddServices(scrapper Scrapper, logger LoggerService) AsynqServer
 	HandlePageProcess(ctx context.Context, t *asynq.Task) error
 	Start()
 }

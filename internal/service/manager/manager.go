@@ -8,13 +8,13 @@ import (
 
 type managerS struct {
 	asynqClient interfaces.AsynqClient
-	logger      interfaces.Logger
+	logger      interfaces.LoggerService
 }
 
 func NewScrapperManager(
 	asynqClient interfaces.AsynqClient,
-	logger interfaces.Logger,
-) interfaces.Manager {
+	logger interfaces.LoggerService,
+) interfaces.ManagerService {
 	return &managerS{
 		asynqClient: asynqClient,
 		logger:      logger,

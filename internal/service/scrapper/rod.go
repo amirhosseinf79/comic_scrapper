@@ -26,11 +26,11 @@ type rodS struct {
 	page                 *rod.Page
 	status               scrapper.Status
 	infoContainer        scrapper.Container
-	logger               interfaces.Logger
+	logger               interfaces.LoggerService
 	episodeListContainer string
 }
 
-func New(headless bool, logger interfaces.Logger) interfaces.Scrapper {
+func New(headless bool, logger interfaces.LoggerService) interfaces.Scrapper {
 	u := launcher.New().Headless(headless).MustLaunch()
 	browser := rod.New().ControlURL(u).MustConnect()
 	localBrowser := browser.MustIncognito()

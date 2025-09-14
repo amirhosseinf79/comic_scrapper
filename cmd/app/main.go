@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/amirhosseinf79/comic_scrapper/cmd/job"
-	"github.com/amirhosseinf79/comic_scrapper/internal/application/handler/scrapper"
+	scraprequest "github.com/amirhosseinf79/comic_scrapper/internal/application/handler/scrap_request"
 	"github.com/amirhosseinf79/comic_scrapper/internal/infrastructure/broker"
 	"github.com/amirhosseinf79/comic_scrapper/internal/infrastructure/database"
 	"github.com/amirhosseinf79/comic_scrapper/internal/infrastructure/persistence"
@@ -21,9 +21,9 @@ func main() {
 
 	manager := manager2.NewScrapperManager(client, logService)
 
-	handler := scrapper.NewManagerHandler(manager, logService)
+	handler := scraprequest.NewManagerHandler(manager, logService)
 
-	server1 := server.NewServer(handler)
+	server1 := server.NewWebServer(handler)
 	server1.InitScrapHandlers()
 	server1.InitLoggerHandlers()
 	server1.Start("8080")

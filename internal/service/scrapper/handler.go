@@ -8,7 +8,7 @@ import (
 	"github.com/amirhosseinf79/comic_scrapper/internal/dto/comic"
 )
 
-func (r *rodS) Handle(logger *model.Log, path string) (*comic.Info, error) {
+func (r *rodS) GenerateComicInfo(logger *model.Log, path string) (*comic.Info, error) {
 	webURL := "https://readcomiconline.li"
 	scrapper := r.SetConfig(logger, webURL)
 	defer r.ctxCancel()

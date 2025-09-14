@@ -21,5 +21,5 @@ type Scrapper interface {
 
 	GeneratePageInfo() comic.Info
 	GenerateEpisodes(initURL string, comicInfo *comic.Info)
-	Handle(logger *model.Log, path string) (*comic.Info, error)
+	GenerateComicInfo(logger *model.Log, path string) (*comic.Info, error)
 }

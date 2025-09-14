@@ -16,10 +16,10 @@ import (
 type serverS struct {
 	server   *asynq.Server
 	scrapper interfaces.Scrapper
-	logger   interfaces.Logger
+	logger   interfaces.LoggerService
 }
 
-func NewServer(addr, port, pwd string) interfaces.AsynqServer {
+func NewQueueServer(addr, port, pwd string) interfaces.AsynqServer {
 	server := asynq.NewServer(
 		asynq.RedisClientOpt{
 			Addr:     addr + ":" + port,
@@ -43,7 +43,7 @@ func NewServer(addr, port, pwd string) interfaces.AsynqServer {
 
 func (s *serverS) AddServices(
 	scrapper interfaces.Scrapper,
-	logger interfaces.Logger,
+	logger interfaces.LoggerService,
 ) interfaces.AsynqServer {
 	s.scrapper = scrapper
 	s.logger = logger
@@ -66,7 +66,7 @@ func (s *serverS) HandlePageProcess(ctx context.Context, t *asynq.Task) error {
 
 	c := make(chan error, 1)
 	go func() {
-		_, err := s.scrapper.Handle(logM, p.Page)
+		_, err := s.scrapper.GenerateComicInfo(logM, p.Page)
 		if logM.ProcessedFiles == logM.TotalFiles && logM.ProcessedEpisodes == logM.TotalEpisodes {
 			logM.Status = enum.Succeed
 		} else {

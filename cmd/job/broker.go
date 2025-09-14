@@ -16,7 +16,7 @@ func HandleBroker(db *gorm.DB) {
 	scrapper2 := scrapper.New(false, logService)
 	defer scrapper2.Close()
 
-	handler := broker.NewServer("localhost", "6379", "")
+	handler := broker.NewQueueServer("localhost", "6379", "")
 	handler.AddServices(scrapper2, logService)
 	handler.Start()
 }

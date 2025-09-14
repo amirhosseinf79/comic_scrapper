@@ -1,4 +1,4 @@
-package scrapper
+package scraprequest
 
 import (
 	"github.com/amirhosseinf79/comic_scrapper/internal/domain/interfaces"
@@ -7,11 +7,11 @@ import (
 )
 
 type scrapperH struct {
-	manager interfaces.Manager
-	logger  interfaces.Logger
+	manager interfaces.ManagerService
+	logger  interfaces.LoggerService
 }
 
-func NewManagerHandler(manager interfaces.Manager, logger interfaces.Logger) interfaces.ScraperHandler {
+func NewManagerHandler(manager interfaces.ManagerService, logger interfaces.LoggerService) interfaces.ScraperHandler {
 	return &scrapperH{
 		manager: manager,
 		logger:  logger,

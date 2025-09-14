@@ -13,7 +13,7 @@ type loggerService struct {
 	baseRepo repository.Logger
 }
 
-func NewLoggerService(baseRepo repository.Logger) interfaces.Logger {
+func NewLoggerService(baseRepo repository.Logger) interfaces.LoggerService {
 	return &loggerService{
 		baseRepo: baseRepo,
 	}
