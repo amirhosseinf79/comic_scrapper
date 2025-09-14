@@ -65,9 +65,9 @@ paths:
       - application/json
       description: Get Request Result By LogID
       parameters:
-      - description: UserID
+      - description: logID
         in: path
-        name: userID
+        name: logID
         required: true
         type: integer
       produces:

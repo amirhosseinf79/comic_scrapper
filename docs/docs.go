@@ -31,8 +31,8 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "UserID",
-                        "name": "userID",
+                        "description": "logID",
+                        "name": "logID",
                         "in": "path",
                         "required": true
                     }

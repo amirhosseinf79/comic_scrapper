@@ -68,7 +68,11 @@ func (r *rodS) GetPageGenres() []string {
 	genresElement, _ := r.page.Timeout(1 * time.Second).Elements("p:nth-of-type(1) a.dotUnder")
 	genres := make([]string, 0)
 	for _, g := range genresElement {
-		genres = append(genres, g.MustText())
+		text, err := g.Text()
+		if err != nil {
+			continue
+		}
+		genres = append(genres, text)
 	}
 	if len(genres) == 0 {
 		r.ConsoleAdd("GetPageGenres", r.status.Failed)
@@ -82,7 +86,8 @@ func (r *rodS) GetPageInfo(title string) string {
 	rawTitle := fmt.Sprintf("%v:", title)
 	infoElements, _ := r.page.Timeout(1 * time.Second).Elements(r.infoContainer.InfoContainer)
 	for _, p := range infoElements {
-		txt := strings.TrimSpace(p.MustText())
+		text, _ := p.Text()
+		txt := strings.TrimSpace(text)
 		if !strings.HasPrefix(txt, r.infoContainer.InfoTitles.Description) {
 			if strings.HasPrefix(txt, rawTitle) {
 				raw := txt[len([]rune(rawTitle)):]
@@ -93,8 +98,12 @@ func (r *rodS) GetPageInfo(title string) string {
 				return strings.TrimSpace(raw)
 			}
 		} else {
-			p.MustNext()
-			next := p.MustNext().MustText()
+			sum, err := p.Next()
+			if err != nil {
+				r.log.HasInfo = false
+				break
+			}
+			next, _ := sum.Text()
 			return strings.TrimSpace(next)
 		}
 	}
@@ -108,7 +117,8 @@ func (r *rodS) GetPageInfoList(title string) []string {
 	rawTitle := fmt.Sprintf("%v:", title)
 	paragraphs, _ := r.page.Timeout(1 * time.Second).Elements(r.infoContainer.InfoContainer)
 	for _, p := range paragraphs {
-		txt := strings.TrimSpace(p.MustText())
+		title, _ := p.Text()
+		txt := strings.TrimSpace(title)
 		if !strings.HasPrefix(txt, r.infoContainer.InfoTitles.Description) {
 			if strings.HasPrefix(txt, rawTitle) {
 				raw := strings.TrimSpace(txt[len([]rune(rawTitle)):])
@@ -131,8 +141,8 @@ func (r *rodS) GetPageEpisodes() []scrapper.Episode {
 		if linkEl == nil {
 			continue
 		}
-		title := linkEl.MustText()
-		if title == "" {
+		title, err := linkEl.Text()
+		if title == "" || err != nil {
 			continue
 		}
 		href, err := linkEl.Attribute("href")
