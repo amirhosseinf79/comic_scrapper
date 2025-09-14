@@ -1,5 +1,5 @@
 # Stage 1: Build binary
-FROM golang:1.24-bullseye AS builder
+FROM golang:1.25-bullseye AS builder
 
 RUN apt-get  update && apt-get install -y git build-essential
 
