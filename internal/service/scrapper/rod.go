@@ -18,8 +18,6 @@ import (
 )
 
 type rodS struct {
-	ctx                  context.Context
-	ctxCancel            context.CancelFunc
 	log                  *model.Log
 	webURL               string
 	browser              *rod.Browser
@@ -53,10 +51,6 @@ func New(headless bool, logger interfaces.LoggerService) interfaces.Scrapper {
 }
 
 func (r *rodS) SetConfig(log *model.Log, webURL string) interfaces.Scrapper {
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Minute)
-	r.ctxCancel = cancel
-	r.ctx = ctx
-
 	r.log = log
 	r.webURL = webURL
 	r.episodeListContainer = "listing"
@@ -92,7 +86,7 @@ func (r *rodS) CallPage(url string) error {
 	var width = 600
 	var height = 300
 	var err error
-	r.page, err = r.browser.Context(r.ctx).Page(proto.TargetCreateTarget{
+	r.page, err = r.browser.Page(proto.TargetCreateTarget{
 		URL:    r.webURL + url,
 		Width:  &width,
 		Height: &height,
