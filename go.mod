@@ -1,6 +1,6 @@
 module github.com/amirhosseinf79/comic_scrapper
 
-go 1.25
+go 1.24
 
 require (
 	github.com/go-rod/rod v0.116.2
