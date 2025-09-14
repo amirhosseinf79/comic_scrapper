@@ -31,7 +31,13 @@ type rodS struct {
 }
 
 func New(headless bool, logger interfaces.LoggerService) interfaces.Scrapper {
-	u := launcher.New().Headless(headless).MustLaunch()
+	u := launcher.New().
+		Set("disable-blink-features", "AutomationControlled").
+		Set("disable-infos").
+		Set("no-sandbox").
+		Set("disable-dev-shm-usage").
+		Headless(headless).
+		MustLaunch()
 	browser := rod.New().ControlURL(u).MustConnect()
 	localBrowser := browser.MustIncognito()
 

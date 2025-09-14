@@ -181,7 +181,8 @@ loop:
 	for {
 		select {
 		case <-ctx.Done():
-			r.ConsoleAdd("NextReaderImage", r.status.Failed, context.DeadlineExceeded.Error())
+			err := ctx.Err()
+			r.ConsoleAdd("NextReaderImage", r.status.Failed, err.Error())
 			break loop
 		default:
 			nextBtn, err := r.page.Timeout(1 * time.Second).Element("#btnNext")
