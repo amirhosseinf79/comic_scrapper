@@ -64,6 +64,12 @@ paths:
       consumes:
       - application/json
       description: Get Request Result By LogID
+      parameters:
+      - description: UserID
+        in: path
+        name: userID
+        required: true
+        type: integer
       produces:
       - application/json
       responses:

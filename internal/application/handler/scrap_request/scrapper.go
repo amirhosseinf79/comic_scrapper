@@ -49,7 +49,7 @@ func (s scrapperH) RequestProcess(ctx *fiber.Ctx) error {
 // @Tags Log
 // @Accept json
 // @Produce json
-// / @Param logID path int true "logID"
+// @Param userID path int true "UserID"
 // @Success 200 {object} manager.LogMock
 // @Router /api/v1/logger/{logID} [get]
 func (s scrapperH) GetLogByID(ctx *fiber.Ctx) error {

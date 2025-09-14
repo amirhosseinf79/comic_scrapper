@@ -28,6 +28,15 @@ const docTemplate = `{
                     "Log"
                 ],
                 "summary": "Get Request Result",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "UserID",
+                        "name": "userID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
