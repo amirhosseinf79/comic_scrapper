@@ -5,5 +5,5 @@ import (
 )
 
 type ManagerService interface {
-	GenerateJson(fields manager.PageScrapRequest) ([]manager.PerPageScrap, error)
+	GenerateJson(fields manager.PageScrapRequest) ([]manager.PerPageResponse, error)
 }

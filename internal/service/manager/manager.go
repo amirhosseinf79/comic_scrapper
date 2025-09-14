@@ -21,8 +21,8 @@ func NewScrapperManager(
 	}
 }
 
-func (m managerS) GenerateJson(fields manager.PageScrapRequest) ([]manager.PerPageScrap, error) {
-	finalLogs := make([]manager.PerPageScrap, 0)
+func (m managerS) GenerateJson(fields manager.PageScrapRequest) ([]manager.PerPageResponse, error) {
+	finalLogs := make([]manager.PerPageResponse, 0)
 	for _, page := range fields.Pages {
 		log := model.InitLog()
 		if err := m.logger.Create(log); err != nil {
@@ -34,7 +34,7 @@ func (m managerS) GenerateJson(fields manager.PageScrapRequest) ([]manager.PerPa
 			Page:          page,
 			LogID:         log.ID,
 		}
-		finalLogs = append(finalLogs, field)
+		finalLogs = append(finalLogs, manager.PerPageResponse{LogID: log.ID})
 		process, err := m.asynqClient.NewPageProcess(field)
 		if err != nil {
 			return nil, err

@@ -19,10 +19,10 @@ type serverS struct {
 	logger   interfaces.LoggerService
 }
 
-func NewQueueServer(addr, port, pwd string) interfaces.AsynqServer {
+func NewQueueServer(addr, pwd string) interfaces.AsynqServer {
 	server := asynq.NewServer(
 		asynq.RedisClientOpt{
-			Addr:     addr + ":" + port,
+			Addr:     addr,
 			Password: pwd,
 			DB:       0,
 		},

@@ -9,6 +9,7 @@ import (
 type Log struct {
 	gorm.Model
 	Status            enum.LogStatus `json:"status"`
+	WebhookSend       bool           `json:"webhookSend"`
 	HasInfo           bool           `json:"hasInfo"`
 	TotalEpisodes     int            `json:"totalEpisodes"`
 	TotalFiles        int            `json:"totalFiles"`

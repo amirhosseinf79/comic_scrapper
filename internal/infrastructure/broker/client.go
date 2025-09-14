@@ -17,9 +17,9 @@ const (
 	typePageProcess = "page:process"
 )
 
-func NewClient(addr, port, pwd string) interfaces.AsynqClient {
+func NewClient(addr, pwd string) interfaces.AsynqClient {
 	client := asynq.NewClient(asynq.RedisClientOpt{
-		Addr:     addr + ":" + port,
+		Addr:     addr,
 		Password: pwd,
 		DB:       0,
 	})
