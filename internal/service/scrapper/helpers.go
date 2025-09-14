@@ -12,11 +12,9 @@ import (
 )
 
 func (r *rodS) ConsoleAdd(state string, status enum.LogStatus, cmd ...string) {
-	msg := fmt.Sprintf("%v: %v - %v:", state, status.String(), cmd)
-	r.log.Console = append(r.log.Console, msg)
-	fmt.Println(msg)
-	if status == enum.Failed {
-		r.log.Status = status
+	err := r.logger.AutoUpdate(r.log, state, status, cmd...)
+	if err != nil {
+		fmt.Println(err)
 	}
 }
 

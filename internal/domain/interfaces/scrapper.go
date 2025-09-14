@@ -6,8 +6,8 @@ import (
 	"github.com/amirhosseinf79/comic_scrapper/internal/dto/scrapper"
 )
 
-type Rod interface {
-	SetConfig(log *model.Log, webURL string) Rod
+type Scrapper interface {
+	SetConfig(log *model.Log, webURL string) Scrapper
 	Close()
 	ClosePage()
 	CallPage(url string) error
@@ -21,4 +21,5 @@ type Rod interface {
 
 	GeneratePageInfo() comic.Info
 	GenerateEpisodes(initURL string, comicInfo *comic.Info)
+	Handle(logger *model.Log, path string) (*comic.Info, error)
 }

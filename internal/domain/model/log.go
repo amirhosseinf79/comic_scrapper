@@ -14,8 +14,8 @@ type Log struct {
 	TotalFiles        int            `json:"totalFiles"`
 	ProcessedEpisodes int            `json:"processedEpisodes"`
 	ProcessedFiles    int            `json:"processedFiles"`
-	Console           []string       `json:"-" gorm:"serializer:json"`
-	Output            comic.Info     `json:"output" gorm:"serializer:json"`
+	Console           []string       `json:"console" gorm:"serializer:json"`
+	Output            comic.Info     `json:"-" gorm:"serializer:json"`
 }
 
 func InitLog() *Log {

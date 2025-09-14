@@ -18,21 +18,25 @@ import (
 )
 
 type rodS struct {
+	ctx                  context.Context
+	ctxCancel            context.CancelFunc
 	log                  *model.Log
 	webURL               string
 	browser              *rod.Browser
 	page                 *rod.Page
 	status               scrapper.Status
 	infoContainer        scrapper.Container
+	logger               interfaces.Logger
 	episodeListContainer string
 }
 
-func NewRod(headless bool) interfaces.Rod {
+func New(headless bool, logger interfaces.Logger) interfaces.Scrapper {
 	u := launcher.New().Headless(headless).MustLaunch()
 	browser := rod.New().ControlURL(u).MustConnect()
 	localBrowser := browser.MustIncognito()
 
 	return &rodS{
+		logger:  logger,
 		browser: localBrowser,
 		status: scrapper.Status{
 			Failed:  enum.Failed,
@@ -42,30 +46,31 @@ func NewRod(headless bool) interfaces.Rod {
 	}
 }
 
-func (r *rodS) SetConfig(log *model.Log, webURL string) interfaces.Rod {
-	return &rodS{
-		log:     log,
-		status:  r.status,
-		webURL:  webURL,
-		browser: r.browser,
-		infoContainer: scrapper.Container{
-			ComicTitle:    "a.bigChar",
-			ComicCover:    "div.rightBox div.barContent img",
-			InfoContainer: ".barContent p",
-			ImageDiv:      "div#divImage img",
-			InfoTitles: scrapper.InfoMap{
-				Genres:          "Genres",
-				Publisher:       "Publisher",
-				Writer:          "Writer",
-				Artist:          "Artist",
-				PublicationDate: "Publication date",
-				Status:          "Status",
-				Description:     "Summary",
-				Views:           "Views",
-			},
+func (r *rodS) SetConfig(log *model.Log, webURL string) interfaces.Scrapper {
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Minute)
+	r.ctxCancel = cancel
+	r.ctx = ctx
+
+	r.log = log
+	r.webURL = webURL
+	r.episodeListContainer = "listing"
+	r.infoContainer = scrapper.Container{
+		ComicTitle:    "a.bigChar",
+		ComicCover:    "div.rightBox div.barContent img",
+		InfoContainer: ".barContent p",
+		ImageDiv:      "div#divImage img",
+		InfoTitles: scrapper.InfoMap{
+			Genres:          "Genres",
+			Publisher:       "Publisher",
+			Writer:          "Writer",
+			Artist:          "Artist",
+			PublicationDate: "Publication date",
+			Status:          "Status",
+			Description:     "Summary",
+			Views:           "Views",
 		},
-		episodeListContainer: "listing",
 	}
+	return r
 }
 
 func (r *rodS) Close() {
@@ -78,11 +83,10 @@ func (r *rodS) ClosePage() {
 
 func (r *rodS) CallPage(url string) error {
 	r.ConsoleAdd("CallPage", r.status.Pending, url)
-	ctx := context.Background()
 	var width = 600
 	var height = 300
 	var err error
-	r.page, err = r.browser.Context(ctx).Page(proto.TargetCreateTarget{
+	r.page, err = r.browser.Context(r.ctx).Page(proto.TargetCreateTarget{
 		URL:    r.webURL + url,
 		Width:  &width,
 		Height: &height,
@@ -231,8 +235,8 @@ func (r *rodS) GenerateEachEpisodeFiles(comicInfo *comic.Info, episodes []comic.
 	}
 	episodes = append(episodes, episode)
 
-	r.log.TotalFiles = counter
-	r.log.ProcessedFiles = len(episode.Files)
+	r.log.TotalFiles += counter
+	r.log.ProcessedFiles += len(episode.Files)
 
 	return episodes, newURL, isFinished
 }
