@@ -11,7 +11,7 @@ import (
 func HandleBroker(db *gorm.DB, handler interfaces.AsynqServer) {
 	logRepo := persistence.NewLoggerRepo(db)
 	logService := logger.NewLoggerService(logRepo)
-	scrapper2 := scrapper.New(false, logService)
+	scrapper2 := scrapper.New(true, logService)
 	defer scrapper2.Close()
 	handler.AddServices(scrapper2, logService)
 	handler.Start()
