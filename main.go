@@ -5,17 +5,19 @@ import (
 	"fmt"
 	"log"
 
-	scrapper2 "github.com/amirhosseinf79/comic_scrapper/internal/services/scrapper"
-	system2 "github.com/amirhosseinf79/comic_scrapper/internal/services/system"
+	"github.com/amirhosseinf79/comic_scrapper/internal/domain/model"
+	scrapper2 "github.com/amirhosseinf79/comic_scrapper/internal/service/scrapper"
+	system2 "github.com/amirhosseinf79/comic_scrapper/internal/service/system"
 )
 
 func main() {
 	webURL := "https://readcomiconline.li"
-	scrapper := scrapper2.NewRod(false).Setconfig(webURL)
-	system := system2.NewSystem("#/comic/")
+	logger := model.InitLog()
+	scrapper := scrapper2.NewRod(false).SetConfig(logger, webURL)
+	system := system2.NewSystem("#/comic/Deadly-Class")
 	defer scrapper.Close()
 
-	err := scrapper.CallPage("/Comic/Dreadstar-and-Company")
+	err := scrapper.CallPage("/Comic/Deadly-Class")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -34,7 +36,9 @@ func main() {
 	firstEpisode := episodes[len(episodes)-1]
 	fmt.Println("First Episode:", firstEpisode.Title)
 
-	//scrapper.GenerateEpisodes(firstEpisode.Url, &comic)
+	for _, episode := range episodes {
+		scrapper.GenerateEpisodes(episode.Url, &comic)
+	}
 
 	path := system.MakeDir("")
 	content, err := json.Marshal(comic)

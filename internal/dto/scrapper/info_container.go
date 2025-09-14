@@ -1,5 +1,7 @@
 package scrapper
 
+import "github.com/amirhosseinf79/comic_scrapper/internal/domain/enum"
+
 type InfoMap struct {
 	Genres          string
 	Publisher       string
@@ -22,4 +24,10 @@ type Container struct {
 type Episode struct {
 	Title string
 	Url   string
+}
+
+type Status struct {
+	Failed  enum.LogStatus
+	Pending enum.LogStatus
+	Success enum.LogStatus
 }

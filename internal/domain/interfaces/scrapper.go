@@ -1,12 +1,13 @@
 package interfaces
 
 import (
+	"github.com/amirhosseinf79/comic_scrapper/internal/domain/model"
 	"github.com/amirhosseinf79/comic_scrapper/internal/dto/comic"
 	"github.com/amirhosseinf79/comic_scrapper/internal/dto/scrapper"
 )
 
 type Rod interface {
-	Setconfig(url string) Rod
+	SetConfig(log *model.Log, webURL string) Rod
 	Close()
 	ClosePage()
 	CallPage(url string) error
