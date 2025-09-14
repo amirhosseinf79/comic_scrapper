@@ -14,7 +14,7 @@ type Log struct {
 	TotalFiles        int            `json:"totalFiles"`
 	ProcessedEpisodes int            `json:"processedEpisodes"`
 	ProcessedFiles    int            `json:"processedFiles"`
-	Console           []string       `json:"-"`
+	Console           []string       `json:"-" gorm:"serializer:json"`
 	Output            comic.Info     `json:"output" gorm:"serializer:json"`
 }
 
@@ -22,5 +22,6 @@ func InitLog() *Log {
 	return &Log{
 		Status:  enum.Queued,
 		HasInfo: true,
+		Console: make([]string, 0),
 	}
 }

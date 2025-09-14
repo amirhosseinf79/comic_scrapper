@@ -43,9 +43,9 @@ func NewRod(headless bool) interfaces.Rod {
 }
 
 func (r *rodS) SetConfig(log *model.Log, webURL string) interfaces.Rod {
-	r.ConsoleAdd("SetConfig", r.status.Success, webURL)
 	return &rodS{
 		log:     log,
+		status:  r.status,
 		webURL:  webURL,
 		browser: r.browser,
 		infoContainer: scrapper.Container{
@@ -126,8 +126,12 @@ func (r *rodS) GenerateDateTime(str string) time.Time {
 	layout := "January 2006"
 	t, err := time.Parse(layout, str)
 	if err != nil {
-		r.ConsoleAdd("GenerateDateTime", r.status.Failed, err.Error())
-		return time.Now()
+		layout = "Jan 2, 2006"
+		t, err = time.Parse(layout, str)
+		if err != nil {
+			r.ConsoleAdd("GenerateDateTime", r.status.Failed, err.Error())
+			return time.Now()
+		}
 	}
 	return t
 }

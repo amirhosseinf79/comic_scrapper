@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/amirhosseinf79/comic_scrapper/internal/domain/model"
 	scrapper2 "github.com/amirhosseinf79/comic_scrapper/internal/service/scrapper"
@@ -14,10 +15,10 @@ func main() {
 	webURL := "https://readcomiconline.li"
 	logger := model.InitLog()
 	scrapper := scrapper2.NewRod(false).SetConfig(logger, webURL)
-	system := system2.NewSystem("#/comic/Deadly-Class")
+	system := system2.NewSystem("#/comic/Dreadstar-and-Company")
 	defer scrapper.Close()
 
-	err := scrapper.CallPage("/Comic/Deadly-Class")
+	err := scrapper.CallPage("/Comic/Dreadstar-and-Company")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -50,6 +51,17 @@ func main() {
 		fmt.Println(err)
 	}
 
+	logger.Output = comic
+
 	fmt.Println("Done.")
-	fmt.Println("Total Episode Downloaded:", len(comic.Episodes))
+	fmt.Printf("Overal Status: %v", logger.Status.String())
+	fmt.Printf("Info Scrapped: %v", logger.HasInfo)
+	fmt.Printf("Total Episode Scrapped: %d/%d", logger.ProcessedEpisodes, logger.TotalEpisodes)
+	fmt.Printf("Total File Scrapped: %d/%d", logger.ProcessedFiles, logger.TotalFiles)
+	fmt.Println("Failed logs:")
+	for _, cmd := range logger.Console {
+		if strings.Contains(cmd, "Failed") {
+			fmt.Println(cmd)
+		}
+	}
 }
