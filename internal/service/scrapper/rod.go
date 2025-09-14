@@ -47,30 +47,36 @@ func New(headless bool, logger interfaces.LoggerService) interfaces.Scrapper {
 			Pending: enum.Pending,
 			Success: enum.Succeed,
 		},
+		episodeListContainer: "listing",
+		infoContainer: scrapper.Container{
+			ComicTitle:    "a.bigChar",
+			ComicCover:    "div.rightBox div.barContent img",
+			InfoContainer: ".barContent p",
+			ImageDiv:      "div#divImage img",
+			InfoTitles: scrapper.InfoMap{
+				Genres:          "Genres",
+				Publisher:       "Publisher",
+				Writer:          "Writer",
+				Artist:          "Artist",
+				PublicationDate: "Publication date",
+				Status:          "Status",
+				Description:     "Summary",
+				Views:           "Views",
+			},
+		},
 	}
 }
 
 func (r *rodS) SetConfig(log *model.Log, webURL string) interfaces.Scrapper {
-	r.log = log
-	r.webURL = webURL
-	r.episodeListContainer = "listing"
-	r.infoContainer = scrapper.Container{
-		ComicTitle:    "a.bigChar",
-		ComicCover:    "div.rightBox div.barContent img",
-		InfoContainer: ".barContent p",
-		ImageDiv:      "div#divImage img",
-		InfoTitles: scrapper.InfoMap{
-			Genres:          "Genres",
-			Publisher:       "Publisher",
-			Writer:          "Writer",
-			Artist:          "Artist",
-			PublicationDate: "Publication date",
-			Status:          "Status",
-			Description:     "Summary",
-			Views:           "Views",
-		},
+	return &rodS{
+		log:           log,
+		webURL:        webURL,
+		browser:       r.browser,
+		page:          r.page,
+		status:        r.status,
+		infoContainer: r.infoContainer,
+		logger:        r.logger,
 	}
-	return r
 }
 
 func (r *rodS) Close() {

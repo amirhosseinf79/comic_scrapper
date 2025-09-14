@@ -12,9 +12,8 @@ import (
 func (r *rodS) GenerateComicInfo(logger *model.Log, path string) (*comic.Info, error) {
 	webURL := "https://readcomiconline.li"
 	scrapper := r.SetConfig(logger, webURL)
-	defer r.ClosePage()
-
 	err := scrapper.CallPage(path)
+	defer scrapper.ClosePage()
 	if err != nil {
 		return nil, err
 	}
