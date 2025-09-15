@@ -190,7 +190,6 @@ func (r *rodS) NextReaderImage() string {
 			err = nextBtn.Timeout(10*time.Second).Click(proto.InputMouseButtonLeft, 1)
 			if err != nil {
 				r.ConsoleAdd("NextReaderImage", r.status.Failed, err.Error())
-				return ""
 			}
 			time.Sleep(waitTime)
 		} else {
