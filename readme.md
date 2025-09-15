@@ -157,27 +157,39 @@ The Docker Compose setup includes:
 ```yaml
 # Key services in docker-compose.yml
 services:
-  app:
-    build: .
-    ports:
-      - "8080:8080"
-    depends_on:
-      - postgres
-      - redis
-      - chrome
-  
-  postgres:
-    image: postgres:15
+  db:
+    image: postgres:17
     environment:
-      POSTGRES_DB: comic_scraper
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-  
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: comic_scrapper
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
   redis:
-    image: redis:7-alpine
-  
-  chrome:
-    image: chromedp/headless-shell:latest
+    image: redis:7
+    volumes:
+      - redis-data:/data
+
+  app:
+    build:
+      context: .
+      dockerfile: cmd/app/Dockerfile
+    ports:
+      - "8081:8081"
+    depends_on:
+      - db
+      - redis
+    environment:
+      - PORT=8081
+      - SQLDB=host=db user=postgres password=postgres dbname=comic_scrapper port=5432 sslmode=disable TimeZone=Asia/Tehran
+      - RedisServer=redis:6379
+      - RedisPass=
+      - DEBUG=false
+
+volumes:
+  db-data:
+  redis-data:
 ```
 
 ## API Documentation
