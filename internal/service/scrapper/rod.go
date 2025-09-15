@@ -37,11 +37,10 @@ func New(headless bool, logger interfaces.LoggerService) interfaces.Scrapper {
 		Headless(headless).
 		MustLaunch()
 	browser := rod.New().ControlURL(u).MustConnect()
-	localBrowser := browser.MustIncognito()
 
 	return &rodS{
 		logger:  logger,
-		browser: localBrowser,
+		browser: browser,
 		status: scrapper.Status{
 			Failed:  enum.Failed,
 			Pending: enum.Pending,
@@ -68,10 +67,11 @@ func New(headless bool, logger interfaces.LoggerService) interfaces.Scrapper {
 }
 
 func (r *rodS) SetConfig(log *model.Log, webURL string) interfaces.Scrapper {
+	localBrowser := r.browser.MustIncognito()
 	return &rodS{
 		log:           log,
 		webURL:        webURL,
-		browser:       r.browser,
+		browser:       localBrowser,
 		page:          r.page,
 		status:        r.status,
 		infoContainer: r.infoContainer,

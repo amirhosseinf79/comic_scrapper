@@ -10,6 +10,7 @@ import (
 	"github.com/amirhosseinf79/comic_scrapper/internal/domain/enum"
 	"github.com/amirhosseinf79/comic_scrapper/internal/domain/interfaces"
 	"github.com/amirhosseinf79/comic_scrapper/internal/dto/manager"
+	"github.com/amirhosseinf79/comic_scrapper/internal/service/scrapper"
 	"github.com/hibiken/asynq"
 )
 
@@ -68,7 +69,7 @@ func (s *serverS) HandlePageProcess(ctx context.Context, t *asynq.Task) error {
 
 	c := make(chan error, 1)
 	go func() {
-		_, err := s.scrapper.GenerateComicInfo(logM, p.Page)
+		_, err := scrapper.GenerateComicInfo(s.scrapper, logM, p.Page)
 		logM.SetStatus()
 		logM.TimeEstimated = time.Now().Unix() - nowTime
 		_ = s.logger.Update(logM)

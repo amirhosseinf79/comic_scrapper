@@ -5,15 +5,17 @@ import (
 	"strings"
 
 	"github.com/amirhosseinf79/comic_scrapper/internal/domain/enum"
+	"github.com/amirhosseinf79/comic_scrapper/internal/domain/interfaces"
 	"github.com/amirhosseinf79/comic_scrapper/internal/domain/model"
 	"github.com/amirhosseinf79/comic_scrapper/internal/dto/comic"
 )
 
-func (r *rodS) GenerateComicInfo(logger *model.Log, path string) (*comic.Info, error) {
+func GenerateComicInfo(scrapper0 interfaces.Scrapper, logger *model.Log, path string) (*comic.Info, error) {
 	webURL := "https://readcomiconline.li"
-	scrapper := r.SetConfig(logger, webURL)
+	scrapper := scrapper0.SetConfig(logger, webURL)
 	err := scrapper.CallPage(path)
 	defer scrapper.ClosePage()
+	defer scrapper.Close()
 	if err != nil {
 		return nil, err
 	}
@@ -30,7 +32,7 @@ func (r *rodS) GenerateComicInfo(logger *model.Log, path string) (*comic.Info, e
 
 	episodes := scrapper.GetPageEpisodes()
 	if len(episodes) == 0 {
-		r.ConsoleAdd("GenerateComicInfo", enum.Failed, "no episode found")
+		scrapper.ConsoleAdd("GenerateComicInfo", enum.Failed, "no episode found")
 		return nil, fmt.Errorf("no episode found")
 	}
 	firstEpisode := episodes[len(episodes)-1]
