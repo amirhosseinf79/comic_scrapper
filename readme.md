@@ -124,32 +124,25 @@ The application will be available at `http://localhost:8080` (or your configured
 The application uses environment variables for configuration. Copy `.env.example` to `.env` and customize as needed:
 
 ```env
-# Server Configuration
+# Server configuration
 PORT=8080
-GIN_MODE=release
 
-# Database Configuration
-DB_HOST=localhost
-DB_PORT=5432
-DB_USER=postgres
-DB_PASSWORD=password
-DB_NAME=comic_scraper
-DB_SSLMODE=disable
+# Application secret key
+SECRET=your_secret_key_here
 
-# Redis Configuration
-REDIS_HOST=localhost
-REDIS_PORT=6379
-REDIS_PASSWORD=
-REDIS_DB=0
+# Database connection string (GORM)
+SQLDB="host=db user=postgres password=postgres dbname=comic_scrapper port=5432 sslmode=disable TimeZone=Asia/Tehran"
 
-# Scraping Configuration
-CHROME_PATH=/usr/bin/google-chrome
-SCRAPE_DELAY=1000
-MAX_CONCURRENT_JOBS=5
+# Redis configuration
+RedisServer=localhost:6379
+RedisPass=your_redis_password_here
 
-# Webhook Configuration
-WEBHOOK_TIMEOUT=30
-WEBHOOK_RETRIES=3
+# Debug mode
+DEBUG=true
+
+# SMS Provider
+KAVENEGAR_KEY=APIKEY_HERE
+KAVENEGAR_SENDER=SENDER_NUMBER
 ```
 
 ## Docker Services
