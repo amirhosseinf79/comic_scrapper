@@ -20,7 +20,11 @@ func (r *rodS) ConsoleAdd(state string, status enum.LogStatus, cmd ...string) {
 
 func (r *rodS) GetReaderTitle() string {
 	r.ConsoleAdd("GetReaderTitle", r.status.Pending)
-	pageTitle := r.page.MustInfo().Title
+	info, err := r.page.Info()
+	if err != nil {
+		return ""
+	}
+	pageTitle := info.Title
 	re := regexp.MustCompile("(.+) - Read")
 	raw := re.FindStringSubmatch(pageTitle)
 	if len(raw) > 0 {
@@ -196,5 +200,9 @@ func (r *rodS) NextReaderImage() string {
 			r.ConsoleAdd("NextReaderImage", r.status.Failed)
 		}
 	}
-	return r.page.MustInfo().URL[len(r.webURL):]
+	info, err := r.page.Info()
+	if err != nil {
+		return ""
+	}
+	return info.URL[len(r.webURL):]
 }
