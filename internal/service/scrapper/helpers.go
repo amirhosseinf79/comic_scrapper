@@ -8,6 +8,7 @@ import (
 
 	"github.com/amirhosseinf79/comic_scrapper/internal/domain/enum"
 	"github.com/amirhosseinf79/comic_scrapper/internal/dto/scrapper"
+	"github.com/go-rod/rod/lib/proto"
 )
 
 func (r *rodS) ConsoleAdd(state string, status enum.LogStatus, cmd ...string) {
@@ -183,12 +184,18 @@ func (r *rodS) NextReaderImage() string {
 	r.ConsoleAdd("NextReaderImage", r.status.Pending)
 	waitTime := 50 * time.Millisecond
 
-	nextBtn, err := r.page.Timeout(10 * time.Second).Element("#btnNext")
-	if err == nil && nextBtn != nil {
-		nextBtn.MustClick()
-		time.Sleep(waitTime)
-	} else {
-		r.ConsoleAdd("NextReaderImage", r.status.Failed)
+	for range 2 {
+		nextBtn, err := r.page.Timeout(10 * time.Second).Element("#btnNext")
+		if err == nil && nextBtn != nil {
+			err = nextBtn.Timeout(10*time.Second).Click(proto.InputMouseButtonLeft, 1)
+			if err != nil {
+				r.ConsoleAdd("NextReaderImage", r.status.Failed, err.Error())
+				return ""
+			}
+			time.Sleep(waitTime)
+		} else {
+			r.ConsoleAdd("NextReaderImage", r.status.Failed)
+		}
 	}
 	return r.page.MustInfo().URL[len(r.webURL):]
 }
