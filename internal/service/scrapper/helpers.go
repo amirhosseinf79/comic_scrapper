@@ -22,6 +22,7 @@ func (r *rodS) GetReaderTitle() string {
 	r.ConsoleAdd("GetReaderTitle", r.status.Pending)
 	info, err := r.page.Info()
 	if err != nil {
+		r.ConsoleAdd("GetReaderTitle", r.status.Failed, err.Error())
 		return ""
 	}
 	pageTitle := info.Title
@@ -202,6 +203,7 @@ func (r *rodS) NextReaderImage() string {
 	}
 	info, err := r.page.Info()
 	if err != nil {
+		r.ConsoleAdd("NextReaderImage", r.status.Failed, err.Error())
 		return ""
 	}
 	return info.URL[len(r.webURL):]
