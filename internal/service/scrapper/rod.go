@@ -113,7 +113,7 @@ func (r *rodS) CallPage(url string) error {
 	return err
 }
 
-func (r *rodS) GenerateWriters(list []string) []comic.Author {
+func (r *rodS) GenerateAuthors(list []string, authorType string) []comic.Author {
 	authors := make([]comic.Author, 0)
 	for _, item := range list {
 		splitFullName := strings.SplitN(item, " ", 2)
@@ -125,25 +125,7 @@ func (r *rodS) GenerateWriters(list []string) []comic.Author {
 		authors = append(authors, comic.Author{
 			FirstName: firstName,
 			LastName:  lastName,
-			Type:      "writer",
-		})
-	}
-	return authors
-}
-
-func (r *rodS) GenerateArtists(list []string) []comic.Author {
-	authors := make([]comic.Author, 0)
-	for _, item := range list {
-		splitFullName := strings.SplitN(item, " ", 2)
-		firstName := splitFullName[0]
-		lastName := ""
-		if len(splitFullName) > 1 {
-			lastName = splitFullName[1]
-		}
-		authors = append(authors, comic.Author{
-			FirstName: firstName,
-			LastName:  lastName,
-			Type:      "artist",
+			Type:      authorType,
 		})
 	}
 	return authors
@@ -184,8 +166,8 @@ func (r *rodS) GeneratePageInfo() comic.Info {
 	pubDateStr := r.GetPageInfo(r.infoContainer.InfoTitles.PublicationDate)
 
 	authors := make([]comic.Author, 0)
-	genWriter := r.GenerateWriters(writerList)
-	genArtist := r.GenerateArtists(artistList)
+	genWriter := r.GenerateAuthors(writerList, "writer")
+	genArtist := r.GenerateAuthors(artistList, "artist")
 	authors = append(authors, genArtist...)
 	authors = append(authors, genWriter...)
 
