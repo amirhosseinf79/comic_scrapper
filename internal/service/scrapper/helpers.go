@@ -127,8 +127,12 @@ func (r *rodS) GetPageInfoList(title string) []string {
 		if !strings.HasPrefix(txt, r.infoContainer.InfoTitles.Description) {
 			if strings.HasPrefix(txt, rawTitle) {
 				raw := strings.TrimSpace(txt[len([]rune(rawTitle)):])
+				items := make([]string, 0)
 				list := strings.Split(raw, ",")
-				return list
+				for _, item := range list {
+					items = append(items, strings.TrimSpace(item))
+				}
+				return items
 			}
 		}
 	}
