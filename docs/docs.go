@@ -83,6 +83,43 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/api/v1/scrapper/sendWebhook": {
+            "post": {
+                "description": "Send Webhook by LogID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Service"
+                ],
+                "summary": "Send Webhook",
+                "parameters": [
+                    {
+                        "description": "Fields",
+                        "name": "fields",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/manager.SendWebhookRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/manager.PerPageResponse"
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -163,6 +200,23 @@ const docTemplate = `{
             "properties": {
                 "logId": {
                     "type": "integer"
+                }
+            }
+        },
+        "manager.SendWebhookRequest": {
+            "type": "object",
+            "properties": {
+                "authorization": {
+                    "type": "string"
+                },
+                "logIds": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "webhookUrl": {
+                    "type": "string"
                 }
             }
         }

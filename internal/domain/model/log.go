@@ -10,6 +10,7 @@ type Log struct {
 	gorm.Model
 	Status            enum.LogStatus `json:"status"`
 	WebhookSend       bool           `json:"webhookSend"`
+	WebhookError      string         `json:"webhookError"`
 	HasInfo           bool           `json:"hasInfo"`
 	TimeEstimated     int64          `json:"timeEstimated"`
 	TotalEpisodes     int            `json:"totalEpisodes"`

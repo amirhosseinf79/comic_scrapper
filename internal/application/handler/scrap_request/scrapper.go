@@ -43,6 +43,31 @@ func (s scrapperH) RequestProcess(ctx *fiber.Ctx) error {
 	return ctx.JSON(response)
 }
 
+// SendWebhook
+// @Summary Send Webhook
+// @Description Send Webhook by LogID
+// @Tags Service
+// @Accept json
+// @Produce json
+// @Param fields body manager.SendWebhookRequest true "Fields"
+// @Success 200 {array} manager.PerPageResponse
+// @Router /api/v1/scrapper/sendWebhook [post]
+func (s scrapperH) SendWebhook(ctx *fiber.Ctx) error {
+	var fields manager.SendWebhookRequest
+	err := ctx.BodyParser(&fields)
+	if err != nil {
+		return ctx.SendStatus(fiber.StatusBadRequest)
+	}
+	response, err := s.manager.SendWebhookByLogID(fields)
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"success": false,
+			"message": err.Error(),
+		})
+	}
+	return ctx.JSON(response)
+}
+
 // GetLogByID
 // @Summary Get Request Result
 // @Description Get Request Result By LogID

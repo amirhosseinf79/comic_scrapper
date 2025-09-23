@@ -27,3 +27,12 @@ func (l logS) GetById(id uint) (*model.Log, error) {
 	err := l.db.First(&log, id).Error
 	return &log, err
 }
+
+func (l logS) GetListById(ids []uint) ([]model.Log, error) {
+	var logs []model.Log
+	if len(ids) == 0 {
+		return logs, gorm.ErrRecordNotFound
+	}
+	err := l.db.Where("id IN ?", ids).Find(&logs).Error
+	return logs, err
+}

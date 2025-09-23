@@ -15,6 +15,7 @@ type clientS struct {
 
 const (
 	typePageProcess = "page:process"
+	typeSendWebhook = "send:webhook"
 )
 
 func NewClient(addr, pwd string) interfaces.AsynqClient {
@@ -40,4 +41,12 @@ func (c *clientS) NewPageProcess(fields manager.PerPageScrap) (*asynq.Task, erro
 		return nil, err
 	}
 	return asynq.NewTask(typePageProcess, payload), nil
+}
+
+func (c *clientS) NewWebhookSend(fields manager.SendWebhook) (*asynq.Task, error) {
+	payload, err := json.Marshal(fields)
+	if err != nil {
+		return nil, err
+	}
+	return asynq.NewTask(typeSendWebhook, payload), nil
 }

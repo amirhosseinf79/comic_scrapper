@@ -6,4 +6,5 @@ import (
 
 type ManagerService interface {
 	GenerateJson(fields manager.PageScrapRequest) ([]manager.PerPageResponse, error)
+	SendWebhookByLogID(fields manager.SendWebhookRequest) ([]manager.PerPageResponse, error)
 }

@@ -29,13 +29,37 @@ func (m managerS) GenerateJson(fields manager.PageScrapRequest) ([]manager.PerPa
 			return nil, err
 		}
 		field := manager.PerPageScrap{
-			Authorization: fields.Authorization,
-			WebhookURL:    fields.WebhookURL,
-			Page:          page,
-			LogID:         log.ID,
+			WebhookRequest: fields.WebhookRequest,
+			Page:           page,
+			LogID:          log.ID,
 		}
 		finalLogs = append(finalLogs, manager.PerPageResponse{LogID: log.ID})
 		process, err := m.asynqClient.NewPageProcess(field)
+		if err != nil {
+			return nil, err
+		}
+		_, err = m.asynqClient.EnqueueTask(process)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return finalLogs, nil
+}
+
+func (m managerS) SendWebhookByLogID(fields manager.SendWebhookRequest) ([]manager.PerPageResponse, error) {
+	finalLogs := make([]manager.PerPageResponse, 0)
+	logList, err := m.logger.GetListById(fields.LogIDs)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, logM := range logList {
+		field := manager.SendWebhook{
+			WebhookRequest: fields.WebhookRequest,
+			ComicInfo:      logM.Output,
+			LogID:          logM.ID,
+		}
+		process, err := m.asynqClient.NewWebhookSend(field)
 		if err != nil {
 			return nil, err
 		}

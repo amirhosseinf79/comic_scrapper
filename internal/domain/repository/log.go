@@ -6,4 +6,5 @@ type Logger interface {
 	Create(log *model.Log) error
 	Update(log *model.Log) error
 	GetById(id uint) (*model.Log, error)
+	GetListById(ids []uint) ([]model.Log, error)
 }

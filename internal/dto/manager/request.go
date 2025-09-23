@@ -1,7 +1,16 @@
 package manager
 
+type WebhookRequest struct {
+	Authorization string `query:"authorization"`
+	WebhookURL    string `json:"webhookUrl"`
+}
+
 type PageScrapRequest struct {
-	Authorization string   `query:"authorization"`
-	WebhookURL    string   `json:"webhookUrl"`
-	Pages         []string `json:"pages"`
+	WebhookRequest
+	Pages []string `json:"pages"`
+}
+
+type SendWebhookRequest struct {
+	WebhookRequest
+	LogIDs []uint `json:"logIds"`
 }

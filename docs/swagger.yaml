@@ -54,6 +54,17 @@ definitions:
       logId:
         type: integer
     type: object
+  manager.SendWebhookRequest:
+    properties:
+      authorization:
+        type: string
+      logIds:
+        items:
+          type: integer
+        type: array
+      webhookUrl:
+        type: string
+    type: object
 info:
   contact: {}
   title: Comic Scrapper
@@ -102,6 +113,30 @@ paths:
               $ref: '#/definitions/manager.PerPageResponse'
             type: array
       summary: Request Scrapper
+      tags:
+      - Service
+  /api/v1/scrapper/sendWebhook:
+    post:
+      consumes:
+      - application/json
+      description: Send Webhook by LogID
+      parameters:
+      - description: Fields
+        in: body
+        name: fields
+        required: true
+        schema:
+          $ref: '#/definitions/manager.SendWebhookRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/manager.PerPageResponse'
+            type: array
+      summary: Send Webhook
       tags:
       - Service
 securityDefinitions:

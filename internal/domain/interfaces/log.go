@@ -10,4 +10,5 @@ type LoggerService interface {
 	AutoUpdate(log *model.Log, state string, status enum.LogStatus, cmd ...string) error
 	Update(log *model.Log) error
 	GetById(id uint) (*model.Log, error)
+	GetListById(id []uint) ([]model.Log, error)
 }

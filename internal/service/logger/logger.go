@@ -44,3 +44,8 @@ func (l *loggerService) GetById(id uint) (*model.Log, error) {
 	logM, err := l.baseRepo.GetById(id)
 	return logM, err
 }
+
+func (l *loggerService) GetListById(ids []uint) ([]model.Log, error) {
+	logM, err := l.baseRepo.GetListById(ids)
+	return logM, err
+}

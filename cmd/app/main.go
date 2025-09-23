@@ -44,7 +44,7 @@ func main() {
 	queueHandler := broker.NewQueueServer(redisServer, redisPassword)
 	db := database.NewGormConnection(dbConnStr, debug)
 	logRepo := persistence.NewLoggerRepo(db)
-	go job.HandleBroker(db, queueHandler)
+	go job.HandleBroker(db, client, queueHandler)
 
 	logService := logger.NewLoggerService(logRepo)
 	manager := manager2.NewScrapperManager(client, logService)

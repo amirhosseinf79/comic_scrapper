@@ -7,5 +7,6 @@ import (
 
 type AsynqClient interface {
 	NewPageProcess(fields manager.PerPageScrap) (*asynq.Task, error)
+	NewWebhookSend(fields manager.SendWebhook) (*asynq.Task, error)
 	EnqueueTask(task *asynq.Task) (*asynq.TaskInfo, error)
 }
