@@ -62,7 +62,7 @@ func (s *serverS) AddServices(
 func (s *serverS) Start() {
 	mux := asynq.NewServeMux()
 	mux.HandleFunc(typePageProcess, s.handlePageProcess)
-	mux.HandleFunc(typePageProcess, s.handleSendWebhook)
+	mux.HandleFunc(typeSendWebhook, s.handleSendWebhook)
 
 	if err := s.server.Run(mux); err != nil {
 		log.Fatalf("could not run server: %v", err)
@@ -133,13 +133,16 @@ func (s *serverS) handleSendWebhook(_ context.Context, t *asynq.Task) error {
 	}
 	err = s.webhook.SendComicInfo(p.WebhookRequest, p.ComicInfo)
 	if err != nil {
+		logM.WebhookSend = false
 		logM.WebhookError = err.Error()
 		if errors.Is(err, shared.ErrInvalidRequest) {
 			log.Printf("Invalid webhook request: %v", err.Error())
 			err = fmt.Errorf("invalid webhook request: %v %w", err.Error(), asynq.SkipRetry)
 		}
+	} else {
+		logM.WebhookError = ""
+		logM.WebhookSend = true
 	}
-	logM.WebhookSend = true
 	_ = s.logger.Update(logM)
 	return err
 }

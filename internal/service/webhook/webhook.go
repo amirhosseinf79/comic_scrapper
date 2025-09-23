@@ -41,7 +41,7 @@ func (s *webhook) SendComicInfo(header manager.WebhookRequest, comicInfo comic.I
 	if err != nil {
 		return err
 	}
-	if res.StatusCode >= 300 && res.StatusCode < 200 {
+	if res.StatusCode >= 300 || res.StatusCode < 200 {
 		return shared.ErrInvalidRequest
 	}
 	return nil
