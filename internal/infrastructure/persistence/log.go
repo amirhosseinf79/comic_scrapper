@@ -1,6 +1,7 @@
 package persistence
 
 import (
+	"github.com/amirhosseinf79/comic_scrapper/internal/domain/enum"
 	"github.com/amirhosseinf79/comic_scrapper/internal/domain/model"
 	"github.com/amirhosseinf79/comic_scrapper/internal/domain/repository"
 	"gorm.io/gorm"
@@ -33,6 +34,6 @@ func (l logS) GetListById(ids []uint) ([]model.Log, error) {
 	if len(ids) == 0 {
 		return logs, gorm.ErrRecordNotFound
 	}
-	err := l.db.Where("id IN ?", ids).Find(&logs).Error
+	err := l.db.Where("id IN ? and status = ?", ids, enum.Succeed).Find(&logs).Error
 	return logs, err
 }
