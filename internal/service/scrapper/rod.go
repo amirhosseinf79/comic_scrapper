@@ -163,7 +163,11 @@ func (r *rodS) GeneratePageInfo() comic.Info {
 	pageStatus := r.GetPageInfo(r.infoContainer.InfoTitles.Status)
 	writerList := r.GetPageInfoList(r.infoContainer.InfoTitles.Writer)
 	artistList := r.GetPageInfoList(r.infoContainer.InfoTitles.Artist)
-	pubDateStr := r.GetPageInfo(r.infoContainer.InfoTitles.PublicationDate)
+
+	dateStr := r.GetPageInfo(r.infoContainer.InfoTitles.PublicationDate)
+	splittedDate := strings.Split(dateStr, "-")
+	pubDate := r.GenerateDateTime(strings.TrimSpace(splittedDate[0]))
+	endDate := r.GenerateDateTime(strings.TrimSpace(splittedDate[len(splittedDate)-1]))
 
 	authors := make([]comic.Author, 0)
 	genWriter := r.GenerateAuthors(writerList, "writer")
@@ -179,7 +183,8 @@ func (r *rodS) GeneratePageInfo() comic.Info {
 		Status:               r.GenerateStatus(pageStatus),
 		Publisher:            r.GetPageInfo(r.infoContainer.InfoTitles.Publisher),
 		Description:          r.GetPageInfo(r.infoContainer.InfoTitles.Description),
-		PublishDate:          r.GenerateDateTime(pubDateStr),
+		PublishDate:          pubDate,
+		EndDate:              endDate,
 		Categories:           r.GetPageInfoList(r.infoContainer.InfoTitles.Genres),
 		Authors:              authors,
 	}

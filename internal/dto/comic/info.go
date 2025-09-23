@@ -26,6 +26,7 @@ type Info struct {
 	Description          string    `json:"description"`
 	Status               int       `json:"status"`
 	PublishDate          time.Time `json:"publishDate"`
+	EndDate              time.Time `json:"endDate"`
 	ImageFileAddress     string    `json:"imageFileAddress"`
 	BannerFileAddress    string    `json:"bannerFileAddress"`
 	ThumbnailFileAddress string    `json:"thumbnailFileAddress"`
