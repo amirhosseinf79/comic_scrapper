@@ -27,9 +27,9 @@ func (l *loggerService) AutoUpdate(log *model.Log, state string, status enum.Log
 	msg := fmt.Sprintf("%v: %v - %v:", state, status.String(), cmd)
 	log.Console = append(log.Console, msg)
 	fmt.Println(msg)
-	if status == enum.Failed {
-		log.Status = status
-	}
+	//if status == enum.Failed {
+	//	log.Status = status
+	//}
 	if len(log.Console)%5 == 0 {
 		return l.Update(log)
 	}

@@ -29,8 +29,16 @@ func InitLog() *Log {
 	}
 }
 
-func (l *Log) SetStatus() {
-	if l.ProcessedFiles == l.TotalFiles && l.ProcessedEpisodes == l.TotalEpisodes && l.TotalEpisodes != 0 && l.TotalFiles != 0 {
+func (l *Log) SetPendingStatus() {
+	l.Status = enum.Pending
+}
+
+func (l *Log) SetFinalStatus() {
+	if l.ProcessedFiles == l.TotalFiles &&
+		l.ProcessedEpisodes == l.TotalEpisodes &&
+		l.TotalEpisodes != 0 &&
+		l.TotalFiles != 0 &&
+		l.HasInfo {
 		l.Status = enum.Succeed
 	} else {
 		l.Status = enum.Failed

@@ -8,7 +8,6 @@ import (
 	"log"
 	"time"
 
-	"github.com/amirhosseinf79/comic_scrapper/internal/domain/enum"
 	"github.com/amirhosseinf79/comic_scrapper/internal/domain/interfaces"
 	"github.com/amirhosseinf79/comic_scrapper/internal/dto/manager"
 	"github.com/amirhosseinf79/comic_scrapper/internal/dto/shared"
@@ -80,7 +79,7 @@ func (s *serverS) handlePageProcess(ctx context.Context, t *asynq.Task) error {
 	nowTime := time.Now().Unix()
 	log.Printf("Processing %v, logID: %v\n", p.Page, p.LogID)
 	logM, err := s.logger.GetById(p.LogID)
-	logM.Status = enum.Pending
+	logM.SetPendingStatus()
 	if err != nil {
 		return err
 	}
@@ -88,7 +87,7 @@ func (s *serverS) handlePageProcess(ctx context.Context, t *asynq.Task) error {
 	c := make(chan error, 1)
 	go func() {
 		_, err := scrapper.GenerateComicInfo(s.scrapper, logM, p.Page)
-		logM.SetStatus()
+		logM.SetFinalStatus()
 		logM.TimeEstimated = time.Now().Unix() - nowTime
 		_ = s.logger.Update(logM)
 		select {

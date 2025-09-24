@@ -34,6 +34,7 @@ func (l logS) GetListById(ids []uint) ([]model.Log, error) {
 	if len(ids) == 0 {
 		return logs, gorm.ErrRecordNotFound
 	}
-	err := l.db.Where("id IN ? and status = ?", ids, enum.Succeed).Find(&logs).Error
+	allowedStatus := []enum.LogStatus{enum.Succeed, enum.Failed}
+	err := l.db.Where("id IN ? and status IN ?", ids, allowedStatus).Find(&logs).Error
 	return logs, err
 }
