@@ -54,6 +54,7 @@ func (m managerS) SendWebhookByLogID(fields manager.SendWebhookRequest) ([]manag
 	}
 
 	for _, logM := range logList {
+		finalLogs = append(finalLogs, manager.PerPageResponse{LogID: logM.ID})
 		field := manager.SendWebhook{
 			WebhookRequest: fields.WebhookRequest,
 			ComicInfo:      logM.Output,
