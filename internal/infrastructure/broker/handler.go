@@ -8,7 +8,6 @@ import (
 	"log"
 	"time"
 
-	"github.com/amirhosseinf79/comic_scrapper/internal/domain/enum"
 	"github.com/amirhosseinf79/comic_scrapper/internal/domain/interfaces"
 	"github.com/amirhosseinf79/comic_scrapper/internal/dto/manager"
 	"github.com/amirhosseinf79/comic_scrapper/internal/dto/shared"
@@ -131,15 +130,12 @@ func (s *serverS) handleSendWebhook(_ context.Context, t *asynq.Task) error {
 	if err != nil {
 		return err
 	}
-	err = s.webhook.SendComicInfo(p.WebhookRequest, p.ComicInfo)
+	err = s.webhook.SetLog(logM, s.logger).SendComicInfo(p.WebhookRequest, p.ComicInfo)
 	if err != nil {
-		_ = s.logger.AutoUpdate(logM, "SendWebhook", enum.Failed, p.WebhookURL, err.Error())
 		if errors.Is(err, shared.ErrInvalidRequest) {
 			log.Printf("Invalid webhook request: %v", err.Error())
 			err = fmt.Errorf("invalid webhook request: %v %w", err.Error(), asynq.SkipRetry)
 		}
-	} else {
-		_ = s.logger.AutoUpdate(logM, "SendWebhook", enum.Succeed, p.WebhookURL)
 	}
 	_ = s.logger.Update(logM)
 	return err
