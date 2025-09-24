@@ -123,6 +123,104 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "comic.Author": {
+            "type": "object",
+            "properties": {
+                "firstName": {
+                    "type": "string"
+                },
+                "lastName": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "comic.Episode": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "files": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/comic.EpisodeFile"
+                    }
+                },
+                "imageAddress": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "comic.EpisodeFile": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "imageAddress": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "comic.Info": {
+            "type": "object",
+            "properties": {
+                "authors": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/comic.Author"
+                    }
+                },
+                "bannerFileAddress": {
+                    "type": "string"
+                },
+                "categories": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "description": {
+                    "type": "string"
+                },
+                "endDate": {
+                    "type": "string"
+                },
+                "episodes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/comic.Episode"
+                    }
+                },
+                "imageFileAddress": {
+                    "type": "string"
+                },
+                "publishDate": {
+                    "type": "string"
+                },
+                "publisher": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                },
+                "thumbnailFileAddress": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
         "enum.LogStatus": {
             "type": "integer",
             "enum": [
@@ -155,6 +253,9 @@ const docTemplate = `{
                 "hasInfo": {
                     "type": "boolean"
                 },
+                "output": {
+                    "$ref": "#/definitions/comic.Info"
+                },
                 "processedEpisodes": {
                     "type": "integer"
                 },
@@ -172,9 +273,6 @@ const docTemplate = `{
                 },
                 "totalFiles": {
                     "type": "integer"
-                },
-                "webhookSend": {
-                    "type": "boolean"
                 }
             }
         },

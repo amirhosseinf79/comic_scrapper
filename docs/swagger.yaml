@@ -1,4 +1,68 @@
 definitions:
+  comic.Author:
+    properties:
+      firstName:
+        type: string
+      lastName:
+        type: string
+      type:
+        type: string
+    type: object
+  comic.Episode:
+    properties:
+      description:
+        type: string
+      files:
+        items:
+          $ref: '#/definitions/comic.EpisodeFile'
+        type: array
+      imageAddress:
+        type: string
+      title:
+        type: string
+    type: object
+  comic.EpisodeFile:
+    properties:
+      description:
+        type: string
+      imageAddress:
+        type: string
+      title:
+        type: string
+    type: object
+  comic.Info:
+    properties:
+      authors:
+        items:
+          $ref: '#/definitions/comic.Author'
+        type: array
+      bannerFileAddress:
+        type: string
+      categories:
+        items:
+          type: string
+        type: array
+      description:
+        type: string
+      endDate:
+        type: string
+      episodes:
+        items:
+          $ref: '#/definitions/comic.Episode'
+        type: array
+      imageFileAddress:
+        type: string
+      publishDate:
+        type: string
+      publisher:
+        type: string
+      status:
+        type: integer
+      thumbnailFileAddress:
+        type: string
+      title:
+        type: string
+    type: object
   enum.LogStatus:
     enum:
     - 0
@@ -23,6 +87,8 @@ definitions:
         type: array
       hasInfo:
         type: boolean
+      output:
+        $ref: '#/definitions/comic.Info'
       processedEpisodes:
         type: integer
       processedFiles:
@@ -35,8 +101,6 @@ definitions:
         type: integer
       totalFiles:
         type: integer
-      webhookSend:
-        type: boolean
     type: object
   manager.PageScrapRequest:
     properties:
